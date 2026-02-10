@@ -26,10 +26,10 @@ app.use((req, res, next) => {
 
 app.use(session({
   store: new pgSession({ pool, tableName: 'session', createTableIfMissing: true }),
-  secret: process.env.SESSION_SECRET || 'bts-indonesia-secret-key-2024',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 24 * 60 * 60 * 1000, secure: false, httpOnly: true }
+  cookie: { maxAge: 24 * 60 * 60 * 1000, secure: process.env.NODE_ENV === 'production', httpOnly: true, sameSite: 'lax' }
 }));
 
 app.use(require('./src/routes/auth'));
