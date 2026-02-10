@@ -1,0 +1,96 @@
+<%- include('partials/header') %>
+<div style="background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a1a2e 100%); padding: 4rem 2rem; text-align: center;">
+  <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem;">
+    <span style="color: #60a5fa;">BTS Indonesia</span> <span style="color: #f59e0b;">API Platform</span>
+  </h1>
+  <p style="color: #94a3b8; font-size: 1.1rem; max-width: 700px; margin: 0 auto 2rem;">
+    Database Tower BTS Seluruh Indonesia - Akses data Cell ID, LAC, MCC, MNC, IMEI, IMSI, ICCID melalui API. Mencakup seluruh provinsi, kabupaten, kota, kecamatan dan desa di Indonesia.
+  </p>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a href="/register" class="btn btn-primary" style="padding: 0.8rem 2rem; font-size: 1rem;">Mulai Gratis</a>
+    <a href="/docs" class="btn" style="background: #334155; color: #f1f5f9; padding: 0.8rem 2rem; font-size: 1rem;">API Documentation</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="grid-4" style="margin-top: 2rem;">
+    <div class="stat-card">
+      <div class="stat-value"><%= typeof stats !== 'undefined' && stats.towers ? parseInt(stats.towers).toLocaleString() : '0' %></div>
+      <div class="stat-label">BTS Towers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><%= typeof stats !== 'undefined' && stats.provinces ? stats.provinces : '0' %></div>
+      <div class="stat-label">Provinsi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><%= typeof stats !== 'undefined' && stats.cities ? parseInt(stats.cities).toLocaleString() : '0' %></div>
+      <div class="stat-label">Kabupaten/Kota</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><%= typeof stats !== 'undefined' && stats.operators ? stats.operators : '0' %></div>
+      <div class="stat-label">Operator</div>
+    </div>
+  </div>
+
+  <h2 style="text-align: center; margin: 3rem 0 1.5rem; color: #f1f5f9;">Fitur Utama</h2>
+  <div class="grid-3">
+    <div class="card">
+      <h3 style="color: #60a5fa;">MSISDN Lookup</h3>
+      <p class="text-sm text-muted">Input nomor telepon Indonesia, dapatkan data Cell ID, LAC, MCC, MNC, IMEI, IMSI, ICCID beserta lokasi tower BTS.</p>
+    </div>
+    <div class="card">
+      <h3 style="color: #22c55e;">Database BTS</h3>
+      <p class="text-sm text-muted">Database tower BTS seluruh Indonesia mencakup semua pulau - Sumatera, Jawa, Kalimantan, Sulawesi, Bali, NTT, NTB, Maluku, Papua.</p>
+    </div>
+    <div class="card">
+      <h3 style="color: #f59e0b;">REST API</h3>
+      <p class="text-sm text-muted">API dengan autentikasi API Key. Tersedia endpoint untuk MSISDN lookup, BTS towers, provinsi, kota dan operator.</p>
+    </div>
+    <div class="card">
+      <h3 style="color: #a78bfa;">Semua Operator</h3>
+      <p class="text-sm text-muted">Support seluruh operator Indonesia - Telkomsel, Indosat, XL Axiata, Tri, Smartfren, By.U/Telkom, Net1.</p>
+    </div>
+    <div class="card">
+      <h3 style="color: #f472b6;">Koordinat GPS</h3>
+      <p class="text-sm text-muted">Data latitude/longitude setiap tower BTS beserta azimuth, tinggi tower, power, band dan tipe jaringan.</p>
+    </div>
+    <div class="card">
+      <h3 style="color: #34d399;">API Key Management</h3>
+      <p class="text-sm text-muted">Generate dan kelola API key melalui dashboard. Monitor penggunaan, batasi akses, dan tracking usage real-time.</p>
+    </div>
+  </div>
+
+  <% if (typeof plans !== 'undefined' && plans.length > 0) { %>
+  <h2 style="text-align: center; margin: 3rem 0 1.5rem; color: #f1f5f9;">Paket Harga</h2>
+  <div class="grid-3">
+    <% plans.forEach(function(plan) { %>
+    <div class="card" style="text-align: center; border-color: <%= plan.name === 'vip' ? '#f59e0b' : plan.name === 'premium' ? '#7c3aed' : '#334155' %>;">
+      <span class="badge badge-<%= plan.name %>"><%= plan.name.toUpperCase() %></span>
+      <h3 style="margin: 1rem 0 0.5rem;"><%= plan.display_name %></h3>
+      <div style="font-size: 1.8rem; font-weight: 700; color: #60a5fa;">
+        <% if (plan.price == 0) { %>GRATIS<% } else { %>Rp <%= parseInt(plan.price).toLocaleString() %><% } %>
+      </div>
+      <p class="text-sm text-muted" style="margin: 0.5rem 0;">/bulan</p>
+      <p class="text-sm" style="margin: 0.5rem 0;">Daily: <%= plan.daily_limit.toLocaleString() %> requests</p>
+      <p class="text-sm" style="margin: 0.5rem 0;">Monthly: <%= plan.monthly_limit.toLocaleString() %> requests</p>
+      <% if (plan.features) { %>
+        <% plan.features.split(',').forEach(function(f) { %>
+          <p class="text-sm text-muted" style="margin: 0.2rem 0;">&#10003; <%= f.trim() %></p>
+        <% }); %>
+      <% } %>
+      <a href="/register" class="btn btn-primary mt-2" style="display: block;">Pilih Paket</a>
+    </div>
+    <% }); %>
+  </div>
+  <% } %>
+
+  <div class="card mt-2" style="text-align: center; margin-top: 3rem;">
+    <h3>Hubungi Developer</h3>
+    <p class="text-muted mt-1">Untuk upgrade plan, custom integration, atau pertanyaan lainnya:</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;">
+      <a href="https://t.me/XCodedLab_Dev" target="_blank" class="btn btn-primary">Telegram: @XCodedLab_Dev</a>
+      <span class="btn" style="background: #334155; color: #f1f5f9;">DANA: +628984668800</span>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') %>

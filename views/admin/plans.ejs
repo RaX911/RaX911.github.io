@@ -1,0 +1,43 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="flex flex-between flex-center mb-2">
+    <h1 style="color: #f59e0b;">Manage Plans</h1>
+    <a href="/admin" class="btn btn-primary btn-sm">Back to Admin</a>
+  </div>
+
+  <% if (typeof message !== 'undefined' && message) { %>
+    <div class="alert alert-info"><%= message %></div>
+  <% } %>
+
+  <div class="grid-3">
+    <% plans.forEach(function(plan) { %>
+    <div class="card" style="border-color: <%= plan.name === 'vip' ? '#f59e0b' : plan.name === 'premium' ? '#7c3aed' : '#334155' %>;">
+      <span class="badge badge-<%= plan.name %>" style="margin-bottom: 1rem;"><%= plan.name.toUpperCase() %></span>
+      <form method="POST" action="/admin/plans/<%= plan.id %>">
+        <div class="form-group">
+          <label>Display Name</label>
+          <input type="text" name="display_name" value="<%= plan.display_name %>">
+        </div>
+        <div class="form-group">
+          <label>Harga (Rp)</label>
+          <input type="number" name="price" value="<%= plan.price %>">
+        </div>
+        <div class="form-group">
+          <label>Daily Limit</label>
+          <input type="number" name="daily_limit" value="<%= plan.daily_limit %>">
+        </div>
+        <div class="form-group">
+          <label>Monthly Limit</label>
+          <input type="number" name="monthly_limit" value="<%= plan.monthly_limit %>">
+        </div>
+        <div class="form-group">
+          <label>Features (comma-separated)</label>
+          <textarea name="features" rows="3" style="width: 100%; padding: 0.5rem; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0;"><%= plan.features %></textarea>
+        </div>
+        <button type="submit" class="btn btn-success" style="width: 100%;">Save Changes</button>
+      </form>
+    </div>
+    <% }); %>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,104 @@
+<%- include('partials/header') %>
+<div class="container">
+  <h1 style="color: #f1f5f9; margin-bottom: 1.5rem;">MSISDN Lookup</h1>
+
+  <div class="card">
+    <h3 class="mb-1">Input Nomor MSISDN</h3>
+    <p class="text-muted text-sm mb-1">Masukkan nomor telepon Indonesia (format: 08xxx, +628xxx, atau 628xxx)</p>
+    <form method="POST" action="/msisdn-lookup" style="display: flex; gap: 0.5rem;">
+      <input type="text" name="msisdn" value="<%= msisdn || '' %>" placeholder="Contoh: 08123456789" required style="flex: 1; padding: 0.8rem; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: #e2e8f0; font-size: 1.1rem;">
+      <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem;">Lookup</button>
+    </form>
+  </div>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error mt-2"><%= error %></div>
+  <% } %>
+
+  <% if (typeof result !== 'undefined' && result) { %>
+  <div style="margin-top: 1.5rem;">
+    <h2 style="color: #60a5fa; margin-bottom: 1rem;">Hasil Lookup: <%= result.msisdn %></h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3 style="color: #22c55e;">Informasi Operator</h3>
+        <table>
+          <tr><td class="text-muted">MSISDN</td><td><strong><%= result.msisdn %></strong></td></tr>
+          <tr><td class="text-muted">International</td><td><%= result.msisdn_international %></td></tr>
+          <tr><td class="text-muted">Operator</td><td><%= result.operator.name %></td></tr>
+          <tr><td class="text-muted">Brand</td><td><strong><%= result.operator.brand %></strong></td></tr>
+          <tr><td class="text-muted">MCC</td><td><%= result.operator.mcc %></td></tr>
+          <tr><td class="text-muted">MNC</td><td><%= result.operator.mnc %></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #f59e0b;">Device Information</h3>
+        <table>
+          <tr><td class="text-muted">IMEI</td><td><code><%= result.device.imei %></code></td></tr>
+          <tr><td class="text-muted">IMSI</td><td><code><%= result.device.imsi %></code></td></tr>
+          <tr><td class="text-muted">ICCID</td><td><code><%= result.device.iccid %></code></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #a78bfa;">Serving Cell (BTS Tower)</h3>
+        <table>
+          <tr><td class="text-muted">Cell ID</td><td><strong><%= result.serving_cell.cell_id %></strong></td></tr>
+          <tr><td class="text-muted">LAC</td><td><strong><%= result.serving_cell.lac %></strong></td></tr>
+          <tr><td class="text-muted">MCC</td><td><%= result.serving_cell.mcc %></td></tr>
+          <tr><td class="text-muted">MNC</td><td><%= result.serving_cell.mnc %></td></tr>
+          <tr><td class="text-muted">Tower Type</td><td><span class="badge badge-active"><%= result.serving_cell.tower_type %></span></td></tr>
+          <tr><td class="text-muted">Band</td><td><%= result.serving_cell.band %></td></tr>
+          <tr><td class="text-muted">Latitude</td><td><%= result.serving_cell.latitude %></td></tr>
+          <tr><td class="text-muted">Longitude</td><td><%= result.serving_cell.longitude %></td></tr>
+          <tr><td class="text-muted">Azimuth</td><td><%= result.serving_cell.azimuth %>&deg;</td></tr>
+          <tr><td class="text-muted">Height</td><td><%= result.serving_cell.height_m %> m</td></tr>
+          <tr><td class="text-muted">Power</td><td><%= result.serving_cell.power_dbm %> dBm</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 style="color: #60a5fa;">Location</h3>
+        <table>
+          <tr><td class="text-muted">Provinsi</td><td><strong><%= result.location.province %></strong></td></tr>
+          <tr><td class="text-muted">Kota/Kabupaten</td><td><%= result.location.city %></td></tr>
+          <tr><td class="text-muted">Address</td><td><%= result.location.address %></td></tr>
+        </table>
+        <div style="margin-top: 1rem;">
+          <a href="https://www.google.com/maps?q=<%= result.serving_cell.latitude %>,<%= result.serving_cell.longitude %>" target="_blank" class="btn btn-primary btn-sm">Lihat di Google Maps</a>
+        </div>
+      </div>
+    </div>
+
+    <% if (result.neighboring_cells && result.neighboring_cells.length > 0) { %>
+    <div class="card mt-2">
+      <h3 style="color: #f472b6;">Neighboring Cells</h3>
+      <table>
+        <thead>
+          <tr><th>Cell ID</th><th>LAC</th><th>Type</th><th>Latitude</th><th>Longitude</th><th>Kota</th></tr>
+        </thead>
+        <tbody>
+          <% result.neighboring_cells.forEach(function(cell) { %>
+            <tr>
+              <td><%= cell.cell_id %></td>
+              <td><%= cell.lac %></td>
+              <td><span class="badge badge-active"><%= cell.tower_type %></span></td>
+              <td><%= cell.latitude %></td>
+              <td><%= cell.longitude %></td>
+              <td><%= cell.city %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+
+    <div class="card mt-2">
+      <h3 class="mb-1">Raw JSON Response</h3>
+      <div class="code-block"><%= JSON.stringify(result, null, 2) %></div>
+    </div>
+  </div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

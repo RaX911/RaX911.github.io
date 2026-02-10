@@ -1,0 +1,55 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="flex flex-between flex-center mb-2">
+    <h1 style="color: #f59e0b;">Manage Users</h1>
+    <a href="/admin" class="btn btn-primary btn-sm">Back to Admin</a>
+  </div>
+
+  <% if (typeof message !== 'undefined' && message) { %>
+    <div class="alert alert-info"><%= message %></div>
+  <% } %>
+
+  <div class="card" style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Plan</th><th>Keys</th><th>Status</th><th>Tanggal</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        <% users.forEach(function(u) { %>
+          <tr>
+            <td><%= u.id %></td>
+            <td><strong><%= u.username %></strong></td>
+            <td><%= u.email %></td>
+            <td><span class="badge <%= u.role === 'admin' ? 'badge-vip' : 'badge-free' %>"><%= u.role %></span></td>
+            <td>
+              <form method="POST" action="/admin/users/<%= u.id %>/plan" style="display: inline-flex; gap: 0.3rem;">
+                <select name="plan" style="padding: 0.2rem 0.4rem; background: #0f172a; border: 1px solid #334155; border-radius: 4px; color: #e2e8f0; font-size: 0.8rem;">
+                  <option value="free" <%= u.plan === 'free' ? 'selected' : '' %>>Free</option>
+                  <option value="premium" <%= u.plan === 'premium' ? 'selected' : '' %>>Premium</option>
+                  <option value="vip" <%= u.plan === 'vip' ? 'selected' : '' %>>VIP</option>
+                </select>
+                <button type="submit" class="btn btn-success btn-sm">Set</button>
+              </form>
+            </td>
+            <td><%= u.key_count %></td>
+            <td><span class="badge <%= u.is_active ? 'badge-active' : 'badge-inactive' %>"><%= u.is_active ? 'Active' : 'Inactive' %></span></td>
+            <td><%= new Date(u.created_at).toLocaleDateString('id-ID') %></td>
+            <td>
+              <div style="display: flex; gap: 0.3rem;">
+                <form method="POST" action="/admin/users/<%= u.id %>/toggle">
+                  <button type="submit" class="btn btn-warning btn-sm"><%= u.is_active ? 'Ban' : 'Unban' %></button>
+                </form>
+                <% if (u.role !== 'admin') { %>
+                  <form method="POST" action="/admin/users/<%= u.id %>/delete" onsubmit="return confirm('Hapus user <%= u.username %>?')">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                  </form>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>

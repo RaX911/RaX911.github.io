@@ -1,0 +1,69 @@
+<%- include('partials/header') %>
+<div class="container">
+  <h1 style="color: #f1f5f9; margin-bottom: 1rem;">Database BTS Towers Indonesia</h1>
+  <p class="text-muted mb-2">Total: <%= total.toLocaleString() %> towers tersedia</p>
+
+  <div class="card mb-2">
+    <form method="GET" action="/towers" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+      <div class="form-group" style="margin-bottom: 0; flex: 1; min-width: 200px;">
+        <label>Filter Provinsi</label>
+        <select name="province" style="padding: 0.6rem; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0; width: 100%;">
+          <option value="">Semua Provinsi</option>
+          <% provinces.forEach(function(p) { %>
+            <option value="<%= p.code %>" <%= selectedProvince === p.code ? 'selected' : '' %>><%= p.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="/towers" class="btn" style="background: #334155; color: #f1f5f9;">Reset</a>
+    </form>
+  </div>
+
+  <div class="card" style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Cell ID</th><th>LAC</th><th>MCC</th><th>MNC</th><th>Operator</th>
+          <th>Type</th><th>Band</th><th>Latitude</th><th>Longitude</th><th>Provinsi</th><th>Kota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% towers.forEach(function(t) { %>
+          <tr>
+            <td><%= t.id %></td>
+            <td><%= t.cell_id %></td>
+            <td><%= t.lac %></td>
+            <td><%= t.mcc %></td>
+            <td><%= t.mnc %></td>
+            <td><%= t.operator_brand %></td>
+            <td><span class="badge badge-active"><%= t.tower_type %></span></td>
+            <td><%= t.band %></td>
+            <td><%= t.latitude %></td>
+            <td><%= t.longitude %></td>
+            <td><%= t.province_name %></td>
+            <td><%= t.city_name %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/towers?page=<%= currentPage - 1 %><%= selectedProvince ? '&province=' + selectedProvince : '' %>">&laquo; Prev</a>
+    <% } %>
+    <% for (let i = Math.max(1, currentPage - 3); i <= Math.min(totalPages, currentPage + 3); i++) { %>
+      <% if (i === currentPage) { %>
+        <span class="active"><%= i %></span>
+      <% } else { %>
+        <a href="/towers?page=<%= i %><%= selectedProvince ? '&province=' + selectedProvince : '' %>"><%= i %></a>
+      <% } %>
+    <% } %>
+    <% if (currentPage < totalPages) { %>
+      <a href="/towers?page=<%= currentPage + 1 %><%= selectedProvince ? '&province=' + selectedProvince : '' %>">Next &raquo;</a>
+    <% } %>
+  </div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

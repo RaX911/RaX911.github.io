@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="flex flex-between flex-center mb-2">
+    <h1 style="color: #f59e0b;">BTS Towers Management</h1>
+    <a href="/admin" class="btn btn-primary btn-sm">Back to Admin</a>
+  </div>
+
+  <% if (typeof message !== 'undefined' && message) { %>
+    <div class="alert alert-info"><%= message %></div>
+  <% } %>
+
+  <div class="card mb-2">
+    <p>Total Towers: <strong><%= total.toLocaleString() %></strong></p>
+    <form method="GET" action="/admin/towers" style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+      <select name="province" style="padding: 0.5rem; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #e2e8f0; flex: 1;">
+        <option value="">Semua Provinsi</option>
+        <% provinces.forEach(function(p) { %>
+          <option value="<%= p.code %>" <%= selectedProvince === p.code ? 'selected' : '' %>><%= p.name %></option>
+        <% }); %>
+      </select>
+      <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+  </div>
+
+  <div class="card" style="overflow-x: auto;">
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Cell ID</th><th>LAC</th><th>MNC</th><th>Operator</th><th>Type</th><th>Lat</th><th>Lng</th><th>Provinsi</th><th>Kota</th></tr>
+      </thead>
+      <tbody>
+        <% towers.forEach(function(t) { %>
+          <tr>
+            <td><%= t.id %></td>
+            <td><%= t.cell_id %></td>
+            <td><%= t.lac %></td>
+            <td><%= t.mnc %></td>
+            <td><%= t.operator_brand %></td>
+            <td><span class="badge badge-active"><%= t.tower_type %></span></td>
+            <td><%= t.latitude %></td>
+            <td><%= t.longitude %></td>
+            <td><%= t.province_name %></td>
+            <td><%= t.city_name %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/admin/towers?page=<%= currentPage - 1 %><%= selectedProvince ? '&province=' + selectedProvince : '' %>">&laquo;</a>
+    <% } %>
+    <% for (let i = Math.max(1, currentPage - 3); i <= Math.min(totalPages, currentPage + 3); i++) { %>
+      <% if (i === currentPage) { %>
+        <span class="active"><%= i %></span>
+      <% } else { %>
+        <a href="/admin/towers?page=<%= i %><%= selectedProvince ? '&province=' + selectedProvince : '' %>"><%= i %></a>
+      <% } %>
+    <% } %>
+    <% if (currentPage < totalPages) { %>
+      <a href="/admin/towers?page=<%= currentPage + 1 %><%= selectedProvince ? '&province=' + selectedProvince : '' %>">&raquo;</a>
+    <% } %>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

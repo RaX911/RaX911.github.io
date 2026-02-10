@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<div class="container">
+  <div class="flex flex-between flex-center mb-2">
+    <h1 style="color: #f59e0b;">Usage Logs</h1>
+    <a href="/admin" class="btn btn-primary btn-sm">Back to Admin</a>
+  </div>
+
+  <div class="card" style="overflow-x: auto;">
+    <% if (logs.length === 0) { %>
+      <p class="text-muted">Belum ada log penggunaan API.</p>
+    <% } else { %>
+    <table>
+      <thead>
+        <tr><th>ID</th><th>User</th><th>API Key</th><th>Endpoint</th><th>Method</th><th>Status</th><th>Response Time</th><th>IP</th><th>Waktu</th></tr>
+      </thead>
+      <tbody>
+        <% logs.forEach(function(l) { %>
+          <tr>
+            <td><%= l.id %></td>
+            <td><%= l.username %></td>
+            <td><%= l.key_name %></td>
+            <td><code style="font-size: 0.75rem;"><%= l.endpoint %></code></td>
+            <td><span class="badge badge-active"><%= l.method %></span></td>
+            <td><%= l.status_code %></td>
+            <td><%= l.response_time_ms %>ms</td>
+            <td><%= l.ip_address %></td>
+            <td><%= new Date(l.created_at).toLocaleString('id-ID') %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+</div>
+<%- include('../partials/footer') %>

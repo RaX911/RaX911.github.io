@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+<div class="container">
+  <h1 style="text-align: center; color: #f1f5f9; margin-bottom: 0.5rem;">Paket Harga</h1>
+  <p class="text-muted text-center mb-2">Pilih paket sesuai kebutuhan Anda</p>
+
+  <div class="grid-3">
+    <% plans.forEach(function(plan) { %>
+    <div class="card" style="text-align: center; border-color: <%= plan.name === 'vip' ? '#f59e0b' : plan.name === 'premium' ? '#7c3aed' : '#334155' %>; position: relative;">
+      <% if (plan.name === 'premium') { %>
+        <div style="position: absolute; top: -12px; right: 20px; background: #7c3aed; color: #fff; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">POPULAR</div>
+      <% } %>
+      <span class="badge badge-<%= plan.name %>" style="font-size: 0.9rem; padding: 0.3rem 1rem;"><%= plan.name.toUpperCase() %></span>
+      <h2 style="margin: 1rem 0 0.5rem; color: #f1f5f9;"><%= plan.display_name %></h2>
+      <div style="font-size: 2.2rem; font-weight: 800; color: #60a5fa;">
+        <% if (plan.price == 0) { %>GRATIS<% } else { %>Rp <%= parseInt(plan.price).toLocaleString() %><% } %>
+      </div>
+      <p class="text-muted" style="margin: 0.3rem 0 1rem;">/bulan</p>
+      <div style="text-align: left; margin: 1rem 0;">
+        <p style="padding: 0.4rem 0; border-bottom: 1px solid #334155;">Daily Limit: <strong><%= plan.daily_limit.toLocaleString() %></strong> requests</p>
+        <p style="padding: 0.4rem 0; border-bottom: 1px solid #334155;">Monthly Limit: <strong><%= plan.monthly_limit.toLocaleString() %></strong> requests</p>
+        <% if (plan.features) { %>
+          <% plan.features.split(',').forEach(function(f) { %>
+            <p style="padding: 0.4rem 0; border-bottom: 1px solid #334155; color: #94a3b8;">&#10003; <%= f.trim() %></p>
+          <% }); %>
+        <% } %>
+      </div>
+      <% if (plan.price == 0) { %>
+        <a href="/register" class="btn btn-primary" style="display: block; padding: 0.8rem;">Mulai Gratis</a>
+      <% } else { %>
+        <a href="https://t.me/XCodedLab_Dev" target="_blank" class="btn btn-primary" style="display: block; padding: 0.8rem;">Hubungi via Telegram</a>
+        <p class="text-sm text-muted mt-1">Pembayaran: DANA +628984668800</p>
+      <% } %>
+    </div>
+    <% }); %>
+  </div>
+</div>
+<%- include('partials/footer') %>
